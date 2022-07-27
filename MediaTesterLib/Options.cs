@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
+using System.Text.Json;
 
 namespace KrahmerSoft.MediaTesterLib
 {
@@ -12,12 +12,13 @@ namespace KrahmerSoft.MediaTesterLib
 		public bool RemoveTempDataFilesUponCompletion { get; set; } = true;
 		public bool SaveTestResultsFileToMedia { get; set; } = true;
 		public long MaxBytesToTest { get; set; } = -1;
+		public string LanguageCode { get; set; }
 
 		public const string CONFIG_FILENAME = "MediaTesterOptions.json";
 
 		public void Serialize(string filePath = CONFIG_FILENAME)
 		{
-			File.WriteAllText(filePath, JsonConvert.SerializeObject(this));
+			File.WriteAllText(filePath, JsonSerializer.Serialize(this));
 		}
 
 		public static Options Deserialize(string filePath = CONFIG_FILENAME)
@@ -25,7 +26,7 @@ namespace KrahmerSoft.MediaTesterLib
 			Options options;
 			try
 			{
-				options = JsonConvert.DeserializeObject<Options>(File.ReadAllText(filePath));
+				options = JsonSerializer.Deserialize<Options>(File.ReadAllText(filePath));
 			}
 			catch //(Exception ex)
 			{
